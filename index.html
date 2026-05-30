@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>พัสกร เนื่องจำนงค์ | Personal Website</title>
+    <style>
+        /* */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #2c3e50;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 18px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            color: #fff;
+        }
+
+        .nav-btn.active {
+            color: #1abc9c;
+        }
+
+        /* เส้นขีดด้านล่างปุ่มเมนูที่มี Animation วิ่งตาม */
+        .nav-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 4px;
+            background-color: #1abc9c;
+            border-radius: 4px;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Main Content Container */
+        .container {
+            max-width: 800px;
+            margin: 100px auto 50px auto;
+            padding: 20px;
+        }
+
+        /* */
+        .page {
+            display: none;
+            background: white;
+            padding: 45px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* เปิดหน้าที่มีสถานะ active พร้อมใส่ Animation เปิดนุ่มนวล */
+        .page.active {
+            display: block;
+            animation: slideUpFade 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        /* แอนิเมชันทำให้เนื้อหาแสดงทีละชิ้น (Staggered Entry Effect) */
+        .page.active .animate-item {
+            opacity: 0;
+            animation: slideUpFade 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .page.active .delay-1 { animation-delay: 0.1s; }
+        .page.active .delay-2 { animation-delay: 0.2s; }
+        .page.active .delay-3 { animation-delay: 0.3s; }
+        .page.active .delay-4 { animation-delay: 0.4s; }
+        .page.active .delay-5 { animation-delay: 0.5s; }
+        .page.active .delay-6 { animation-delay: 0.6s; }
+
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Typography & หัวข้อ */
+        h1 {
+            color: #2c3e50;
+            font-size: 32px;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 4px;
+            background: #1abc9c;
+            margin: 8px auto 0 auto;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .page.active h1::after {
+            width: 80px;
+        }
+
+        h2 {
+            color: #1abc9c;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        /* รูปภาพและวิดีโอ พร้อม Animation ยกระดับ */
+        img, video {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            max-height: 400px;
+            object-fit: cover;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        img:hover, video:hover {
+            transform: scale(1.03) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(26, 188, 156, 0.15);
+        }
+
+        /* ตกแต่งส่วนเสริมของเครื่องเล่นวิดีโอเฉพาะตัว */
+        video {
+            background-color: #000;
+            width: 100%;
+            max-width: 640px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* รูปโปรไฟล์กลม */
+        .img-profile {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 6px solid #1abc9c;
+            display: block;
+            margin: 20px auto;
+            animation: profileFloat 4s ease-in-out infinite;
+        }
+
+        .img-profile:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        @keyframes profileFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* กล่องข้อมูลและเนื้อหากิจกรรมยามว่าง (Hobby) */
+        .hobby-item {
+            margin-bottom: 45px;
+            padding-bottom: 30px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .hobby-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        /* ลิงก์เพลงที่มีแอนิเมชันปุ่มสั่นไหวเบาๆ */
+        a.song-link {
+            display: inline-block;
+            background-color: #e74c3c;
+            color: white;
+            text-decoration: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        a.song-link:hover {
+            background-color: #c0392b;
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        /* แอนิเมชันแสงสะท้อนวิ่งผ่านปุ่มเพลง */
+        a.song-link::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 30%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg);
+            transition: 0.75s;
+        }
+
+        a.song-link:hover::after {
+            left: 120%;
+        }
+
+        /* กล่องข้อความหน้าประวัติการศึกษา */
+        .profile-info {
+            background-color: #f8fafc;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #1abc9c;
+            margin-top: 25px;
+            text-align: left;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        /* หน้า Motto */
+        .motto-text {
+            font-size: 36px;
+            font-style: italic;
+            color: #2c3e50;
+            margin: 40px 0;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: inline-block;
+            animation: mottoFloat 3.5s ease-in-out infinite;
+        }
+
+        .motto-sub {
+            color: #1abc9c;
+            font-size: 24px;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            animation: heartbeat 2s infinite;
+        }
+
+        @keyframes mottoFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(1deg); }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* สไตล์สำหรับส่วนช่องทางติดต่อ (Contact Page) */
+        .contact-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 500px;
+            margin: 30px auto 0 auto;
+        }
+
+        .contact-card {
+            display: flex;
+            align-items: center;
+            background-color: #f8fafc;
+            padding: 15px 25px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(26, 188, 156, 0.12);
+            border-color: #1abc9c;
+        }
+
+        /* ปรับแต่งไอคอนการติดต่อให้เหมาะสม ไม่โดนขนาดรูปสไตล์ส่วนกลางครอบ */
+        img.contact-icon {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            margin: 0 20px 0 0 !important;
+            border-radius: 0;
+            box-shadow: none !important;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-card:hover img.contact-icon {
+            transform: scale(1.1);
+        }
+
+        .contact-info {
+            text-align: left;
+        }
+
+        .contact-info h3 {
+            font-size: 14px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0 0 2px 0;
+        }
+
+        .contact-info p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0;
+        }
+
+        /* สำหรับหน้าจอมือถือ */
+        @media (max-width: 600px) {
+            .nav-btn {
+                padding: 15px 12px;
+                font-size: 13px;
+            }
+            .container {
+                margin-top: 80px;
+                padding: 10px;
+            }
+            .page {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 26px;
+            }
+            .motto-text {
+                font-size: 28px;
+            }
+            .contact-card {
+                padding: 12px 18px;
+            }
+            .contact-info p {
+                font-size: 15px;
+            }
+            img.contact-icon {
+                width: 40px;
+                height: 40px;
+                margin-right: 15px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- -->
+    <nav>
+        <div class="nav-container" id="navContainer">
+            <button class="nav-btn active" onclick="openPage('home', this)">Home</button>
+            <button class="nav-btn" onclick="openPage('about', this)">About Me</button>
+            <button class="nav-btn" onclick="openPage('hobby', this)">Hobby</button>
+            <button class="nav-btn" onclick="openPage('works', this)">Works</button>
+            <button class="nav-btn" onclick="openPage('motto', this)">Motto</button>
+            <button class="nav-btn" onclick="openPage('contact', this)">Contact</button>
+            <div class="nav-indicator" id="navIndicator"></div>
+        </div>
+    </nav>
+
+    <!-- ส่วนเนื้อหาแต่ละหน้า -->
+    <div class="container">
+
+        <!-- -->
+        <div id="home" class="page active">
+            <h1 class="animate-item delay-1">ยินดีต้อนรับ</h1>
+            <p class="animate-item delay-2" style="font-size: 20px; font-weight: 500;">นี่คือ WEBSITE ส่วนตัวของ พัสกร เนื่องจำนงค์</p>
+            <div class="animate-item delay-3">
+                <img src="tu.png" alt="ภาพของ พัสกร (tu.png)">
+            </div>
+        </div>
+
+        <!-- -->
+        <div id="about" class="page">
+            <h1 class="animate-item delay-1">About Me</h1>
+            
+            <div class="animate-item delay-2">
+                <img src="face.png" alt="รูปโปรไฟล์ (face.png)" class="img-profile">
+            </div>
+            
+            <div class="profile-info animate-item delay-3">
+                <p><strong>ชื่อ-นามสกุล:</strong> พัสกร เนื่องจำนงค์</p>
+                <p><strong>ระดับชั้น:</strong> ม.6/6 เลขที่ 20</p>
+                <p><strong>อายุ:</strong> 17 ปี</p>
+                <p><strong>วันเกิด:</strong> 12 มีนาคม 2552</p>
+            </div>
+
+            <h2 class="animate-item delay-4">สถาบันการศึกษาปัจจุบัน</h2>
+            <p class="animate-item delay-4">โรงเรียนบ้านบึง "อุตสาหกรรมนุเคราะห์"</p>
+            <div class="animate-item delay-5">
+                <img src="school.png" alt="โรงเรียนบ้านบึงอุตสาหกรรมนุเคราะห์ (school.png)">
+            </div>
+        </div>
+
+        <!-- -->
+        <div id="hobby" class="page">
+            <h1 class="animate-item delay-1">งานอดิเรก & สิ่งที่ชื่นชอบ</h1>
+
+            <!-- 1. เล่นกีต้าร์ -->
+            <div class="hobby-item animate-item delay-2">
+                <h2>🎸 งานอดิเรก: เล่นกีต้าร์</h2>
+                <p style="font-weight: 600; color: #2c3e50;">เพลง คุกเข่า - COCKTAIL</p>
+                <video controls preload="metadata">
+                    <source src="คุกเข่า.mp4" type="video/mp4">
+                    เบราว์เซอร์ของคุณไม่รองรับการแสดงผลวิดีโอนี้
+                </video>
+            </div>
+
+            <!-- 2. กีฬาที่ชอบ (ย้ายมาต่อจากเล่นกีต้าร์ทันที) -->
+            <div class="hobby-item animate-item delay-3">
+                <h2>⚽ กีฬาที่ชื่นชอบ</h2>
+                <p style="font-weight: 600; color: #2c3e50;">ฟุตบอล</p>
+                <img src="foot.png" alt="กีฬาที่ชื่นชอบ (foot.png)">
+            </div>
+
+            <!-- 3. เพลงที่ชอบ -->
+            <div class="hobby-item animate-item delay-4">
+                <h2>🎵 เพลงที่ชอบ</h2>
+                <p>เพลง สาวเซี่ยงไฮ้ - COCKTAIL</p>
+                <a href="https://youtu.be/irO3jAZAN_o?si=qNdOCdkWmdm3Lah6" target="_blank" class="song-link">สาวเซี่ยงไฮ้ 🎧</a>
+            </div>
+
+            <!-- 4. เกมที่ชอบ -->
+            <div class="hobby-item animate-item delay-5">
+                <h2>🎮 เกมที่ชื่นชอบ</h2>
+                <p style="font-weight: 600; color: #2c3e50;">Resident Evil 4 Remake</p>
+                <img src="re4.png" alt="เกมที่ชื่นชอบ (re4.png)">
+            </div>
+
+            <!-- 5. หนังที่ชอบ -->
+            <div class="hobby-item animate-item delay-6">
+                <h2>🎬 หนังที่ชื่นชอบ</h2>
+                <p style="font-weight: 600; color: #2c3e50;">ONE FOR THE ROAD -วันสุดท้ายก่อนบายเธอ-</p>
+                <img src="non.png" alt="หนังที่ชื่นชอบ (non.png)">
+            </div>
+
+            <!-- 6. วงดนตรีที่ชอบ -->
+            <div class="hobby-item animate-item delay-6">
+                <h2>🎤 วงดนตรีที่ชอบ</h2>
+                <p style="font-weight: 600; color: #1abc9c;">COCKTAIL</p>
+                <img src="cocktail.png" alt="วงค็อกเทล (cocktail.png)">
+            </div>
+        </div>
+
+        <!-- -->
+        <div id="works" class="page">
+            <h1 class="animate-item delay-1">ผลงาน</h1>
+
+            <!-- ผลงานที่ 1: Animation Award -->
+            <div class="hobby-item animate-item delay-2">
+                <h2>🏆 รางวัลผลงานแอนิเมชัน</h2>
+                <p style="font-weight: 600; color: #2c3e50; margin-bottom: 20px;">
+                    ชนะรางวัล popular vote animation โครงการ wealthmagik เงินออมสร้างชาติ
+                </p>
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin: 15px 0;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <img src="ani.png" alt="ผลงานแอนิเมชัน (ani.png)" style="margin: 0; width: 100%;">
+                    </div>
+                    <div style="flex: 1; min-width: 250px;">
+                        <img src="phon.png" alt="ผลงานแอนิเมชัน (phon.png)" style="margin: 0; width: 100%;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ผลงานที่ 2: Video Editing (ปรับปรุงพรีวิววิดีโอ YouTube แบบตัดขอบดำ) -->
+            <div class="hobby-item animate-item delay-4" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+                <h2>🎬 ผลงานการตัดต่อวิดีโอ</h2>
+                <p style="font-weight: 600; color: #2c3e50; margin-bottom: 20px;">
+                    เป็นผู้ตัดต่อคลิปให้ช่องการตลาดการเตลิด
+                </p>
+                <div style="display: flex; gap: 20px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 15px 0;">
+                    <!-- รูปภาพหลัก ed.png -->
+                    <div style="flex: 1; min-width: 260px; max-width: 320px;">
+                        <img src="ed.png" alt="ผู้ตัดต่อ (ed.png)" style="margin: 0; width: 100%;">
+                    </div>
+                    <!-- รูปภาพพรีวิวคลิกไปที่ลิงก์ YouTube ที่ครอบตัดขอบดำออกอย่างสมบูรณ์แบบ -->
+                    <div style="flex: 1; min-width: 260px; max-width: 320px;">
+                        <a href="https://youtu.be/x1CzRhZb93Y?si=31oCAg4VvRmY73QK" target="_blank" style="display: block; position: relative; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); aspect-ratio: 16/9; width: 100%;">
+                            <!-- ใช้ object-fit cover ร่วมกับ scale 1.15 เพื่อดันและครอบตัดขอบสีดำของภาพ hqdefault ออกไปอย่างเรียบเนียน -->
+                            <img src="https://img.youtube.com/vi/x1CzRhZb93Y/hqdefault.jpg" alt="พรีวิววิดีโอ" style="margin: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.15); display: block;">
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(231, 76, 60, 0.9); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 10;">
+                                ▶
+                            </div>
+                        </a>
+                        <p style="font-size: 14px; color: #7f8c8d; margin-top: 10px;">คลิกที่นี่เพื่อชมคลิปบน YouTube 📺</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- -->
+        <div id="motto" class="page">
+            <h1 class="animate-item delay-1">คติประจำใจ</h1>
+            <div class="animate-item delay-2">
+                <div class="motto-text">
+                    " ทำวันนี้ให้ดีที่สุด "
+                    <span class="motto-sub">อิอิ 😉</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- -->
+        <div id="contact" class="page">
+            <h1 class="animate-item delay-1">ช่องทางการติดต่อ</h1>
+            
+            <div class="contact-container animate-item delay-2">
+                <!-- Phone -->
+                <div class="contact-card">
+                    <span style="font-size: 38px; margin-right: 20px;">📞</span>
+                    <div class="contact-info">
+                        <h3>เบอร์โทรศัพท์</h3>
+                        <p>0633524952</p>
+                    </div>
+                </div>
+
+                <!-- Line -->
+                <div class="contact-card">
+                    <img src="line.png" alt="Line ID" class="contact-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span style="font-size: 38px; margin-right: 20px; display:none;">💬</span>
+                    <div class="contact-info">
+                        <h3>Line ID</h3>
+                        <p>0633524952</p>
+                    </div>
+                </div>
+
+                <!-- Facebook -->
+                <div class="contact-card">
+                    <img src="F.png" alt="Facebook" class="contact-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span style="font-size: 38px; margin-right: 20px; display:none;">👥</span>
+                    <div class="contact-info">
+                        <h3>Facebook</h3>
+                        <p>Patsakorn nuangjumnong</p>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="contact-card">
+                    <img src="em.png" alt="Email" class="contact-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span style="font-size: 38px; margin-right: 20px; display:none;">✉️</span>
+                    <div class="contact-info">
+                        <h3>Email</h3>
+                        <p>Patsakornnuangjumnong@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- -->
+    <script>
+        // ทำงานเมื่อเพจโหลดเสร็จ เพื่อตั้งค่าเริ่มต้นให้แถบเมนูสลับหน้าขยับตามปุ่มแรก
+        window.addEventListener('DOMContentLoaded', () => {
+            updateNavIndicator(document.querySelector('.nav-btn.active'));
+        });
+
+        // จัดการปรับขนาดแถบเมนูตามหน้าจออัตโนมัติเมื่อขนาดหน้าเปลี่ยน
+        window.addEventListener('resize', () => {
+            updateNavIndicator(document.querySelector('.nav-btn.active'));
+        });
+
+        function updateNavIndicator(activeButton) {
+            const indicator = document.getElementById('navIndicator');
+            if (activeButton && indicator) {
+                indicator.style.width = `${activeButton.offsetWidth}px`;
+                indicator.style.left = `${activeButton.offsetLeft}px`;
+            }
+        }
+
+        function openPage(pageId, elmnt) {
+            // คัดกรองและซ่อนหน้าเพจอื่น
+            var i, page, navlinks;
+            page = document.getElementsByClassName("page");
+            for (i = 0; i < page.length; i++) {
+                page[i].classList.remove("active");
+            }
+
+            // ลบสถานะความแอคทีฟออกจากปุ่มเมนูทั้งหมด
+            navlinks = document.getElementsByClassName("nav-btn");
+            for (i = 0; i < navlinks.length; i++) {
+                navlinks[i].classList.remove("active");
+            }
+
+            // แสดงหน้าเป้าหมาย พร้อมให้สิทธิแอคทีฟปุ่มที่กดเลือก
+            const targetPage = document.getElementById(pageId);
+            targetPage.classList.add("active");
+            elmnt.classList.add("active");
+
+            // อัปเดตขีดด้านล่างวิ่งมาตอกย้ำตำแหน่ง
+            updateNavIndicator(elmnt);
+
+            // คืนค่าตำแหน่งหน้าจอเลื่อนไปบนสุดทุกครั้งเพื่อเริ่มจังหวะการเลื่อนแอนิเมชันใหม่
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+
+</body>
+</html>
